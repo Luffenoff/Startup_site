@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login_styles.css') }}" />
+    <title>Вход</title>
+</head>
+<body>
+    <div class="container">
+        <form action="{{ url_for('login') }}" method="POST" class="login-form">
+            <h2>Вход</h2>
+            <label for="username">Логин:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Войти</button>
+            <div class="links">
+                <a href="{{ url_for('register') }}">Регистрация</a>
+                <a href="{{ url_for('forgot_password') }}">Забыли пароль?</a>
+            </div>
+        </form>
+    </div>
+    
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

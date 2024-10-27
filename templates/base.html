@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <title>Главная страница</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-links">
+                <a href="/login" class="login-button">Вход / Регистрация</a>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='images/1.png') }}" alt="Image 1" />
+            <img src="{{ url_for('static', filename='images/2.png') }}" alt="Image 2" />
+            <img src="{{ url_for('static', filename='images/3.png') }}" alt="Image 3" />
+            <img src="{{ url_for('static', filename='images/4.png') }}" alt="Image 4" />
+            <img src="{{ url_for('static', filename='images/5.png') }}" alt="Image 5" />
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

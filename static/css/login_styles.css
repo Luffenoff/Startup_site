@@ -14,12 +14,12 @@ body {
     min-height: 100vh; /* Центрируем по вертикали */
 }
 
-/* Стили для формы */
+/* Стили для формы восстановления пароля */
 .login-form {
     display: flex;
     flex-direction: column;
-    width: 400px; /* Ширина формы */
-    padding: 30px; /* Внутренние отступы формы */
+    width: 400px; /* Увеличиваем ширину формы */
+    padding: 30px; /* Увеличиваем внутренние отступы формы */
     background-color: #fff; /* Фон формы */
     border-radius: 10px; /* Скругленные углы */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
@@ -40,8 +40,8 @@ body {
 
 /* Поля ввода */
 .login-form input {
-    padding: 12px; /* Внутренние отступы */
-    margin-top: 8px; /* Отступ сверху */
+    padding: 12px; /* Увеличиваем внутренние отступы */
+    margin-top: 8px; /* Увеличиваем отступ сверху */
     border: 1px solid #00272B; /* Граница полей ввода */
     border-radius: 5px; /* Скругление углов */
     background-color: #f5f5f5; /* Цвет фона полей ввода */
@@ -49,8 +49,8 @@ body {
 
 /* Кнопка */
 .login-form button {
-    margin-top: 25px; /* Отступ сверху для кнопки */
-    padding: 12px; /* Внутренние отступы для кнопки */
+    margin-top: 25px; /* Увеличиваем отступ сверху для кнопки */
+    padding: 12px; /* Увеличиваем внутренние отступы для кнопки */
     background-color: #00272B; /* Цвет кнопки */
     color: #fff; /* Цвет текста кнопки */
     border: none; /* Без рамки */
@@ -66,7 +66,7 @@ body {
 
 /* Ссылки */
 .links {
-    margin-top: 20px; /* Отступ сверху для ссылок */
+    margin-top: 20px; /* Увеличиваем отступ сверху для ссылок */
     display: flex; /* Используем flexbox для размещения ссылок */
     justify-content: space-between; /* Размещаем ссылки по краям */
 }
@@ -81,48 +81,4 @@ body {
 /* Цвет ссылки при наведении */
 .links a:hover {
     color: #00504F; /* Цвет ссылки при наведении */
-}
-
-/* Стили для навигации */
-header {
-    background-color: #00272B; /* Цвет фона для навигации */
-    padding: 10px 20px; /* Отступы сверху и снизу */
-}
-
-.nav-links {
-    display: flex;
-    justify-content: flex-end; /* Выравнивание кнопки вправо */
-}
-
-.login-button {
-    color: #fff; /* Цвет текста кнопки */
-    text-decoration: none; /* Убираем подчеркивание */
-    padding: 10px 15px; /* Внутренние отступы кнопки */
-    background-color: #00504F; /* Цвет фона кнопки */
-    border-radius: 5px; /* Скругленные углы */
-    transition: background-color 0.3s; /* Плавный переход */
-}
-
-.login-button:hover {
-    background-color: #007B7F; /* Цвет фона при наведении */
-}
-
-/* Стили контейнера изображений */
-.image-container {
-    display: flex; /* Используем флекс для выравнивания */
-    justify-content: center; /* Центрируем изображения */
-    flex-wrap: wrap; /* Оборачиваем изображения, если не помещаются в одну строку */
-    margin-top: 20px; /* Отступ сверху */
-}
-
-.image-container img {
-    width: 150px; /* Ширина изображений */
-    height: auto; /* Высота автоматически */
-    margin: 10px; /* Отступ между изображениями */
-    border-radius: 5px; /* Скругленные углы изображений */
-    transition: transform 0.3s; /* Плавный переход для анимации */
-}
-
-.image-container img:hover {
-    transform: scale(1.1); /* Увеличение изображения при наведении */
 }
