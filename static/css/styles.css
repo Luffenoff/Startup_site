@@ -1,128 +1,127 @@
-/* Общие стили для body */
 body {
-    background-color: #E0FF4F; /* Цвет фона страницы */
-    font-family: Arial, sans-serif; /* Шрифт для всей страницы */
-    margin: 0; /* Убираем отступы */
-    padding: 0; /* Убираем внутренние отступы */
+    background-color: #E0FF4F; 
+    font-family: Arial, sans-serif; 
+    margin: 0; 
+    padding: 0; 
 }
 
-/* Стили контейнера */
+
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Центрируем по вертикали */
+    min-height: 100vh; 
 }
 
-/* Стили для формы */
+
 .login-form {
     display: flex;
     flex-direction: column;
-    width: 400px; /* Ширина формы */
-    padding: 30px; /* Внутренние отступы формы */
-    background-color: #fff; /* Фон формы */
-    border-radius: 10px; /* Скругленные углы */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
-    border: 2px solid #00272B; /* Рамка формы */
+    width: 400px; 
+    padding: 30px; 
+    background-color: #fff; 
+    border-radius: 10px; 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
+    border: 2px solid #00272B; 
 }
 
-/* Заголовок формы */
+
 .login-form h2 {
-    text-align: center; /* Центрируем текст */
-    color: #00272B; /* Цвет заголовка */
+    text-align: center; 
+    color: #00272B; 
 }
 
-/* Метки полей */
+
 .login-form label {
-    margin-top: 15px; /* Увеличиваем отступ сверху */
-    color: #333; /* Цвет меток */
+    margin-top: 15px; 
+    color: #333; 
 }
 
-/* Поля ввода */
+
 .login-form input {
-    padding: 12px; /* Внутренние отступы */
-    margin-top: 8px; /* Отступ сверху */
-    border: 1px solid #00272B; /* Граница полей ввода */
-    border-radius: 5px; /* Скругление углов */
-    background-color: #f5f5f5; /* Цвет фона полей ввода */
+    padding: 12px; 
+    margin-top: 8px; 
+    border: 1px solid #00272B; 
+    border-radius: 5px; 
+    background-color: #f5f5f5; 
 }
 
 /* Кнопка */
 .login-form button {
-    margin-top: 25px; /* Отступ сверху для кнопки */
-    padding: 12px; /* Внутренние отступы для кнопки */
-    background-color: #00272B; /* Цвет кнопки */
-    color: #fff; /* Цвет текста кнопки */
-    border: none; /* Без рамки */
-    border-radius: 5px; /* Скругление углов */
-    cursor: pointer; /* Курсор при наведении */
-    transition: background-color 0.3s; /* Плавный переход цвета */
+    margin-top: 25px; 
+    padding: 12px; 
+    background-color: #00272B; 
+    color: #fff; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
 }
 
-/* Цвет кнопки при наведении */
+
 .login-form button:hover {
-    background-color: #00504F; /* Цвет кнопки при наведении */
+    background-color: #00504F; 
 }
 
-/* Ссылки */
+
 .links {
-    margin-top: 20px; /* Отступ сверху для ссылок */
-    display: flex; /* Используем flexbox для размещения ссылок */
-    justify-content: space-between; /* Размещаем ссылки по краям */
+    margin-top: 20px; 
+    display: flex; 
+    justify-content: space-between; 
 }
 
-/* Стили для ссылок */
+
 .links a {
-    color: #00272B; /* Цвет ссылки */
-    text-decoration: none; /* Убираем подчеркивание */
-    transition: color 0.3s; /* Плавный переход цвета */
+    color: #00272B; 
+    text-decoration: none; 
+    transition: color 0.3s; 
 }
 
-/* Цвет ссылки при наведении */
+
 .links a:hover {
-    color: #00504F; /* Цвет ссылки при наведении */
+    color: #00504F; 
 }
 
-/* Стили для навигации */
+
 header {
-    background-color: #00272B; /* Цвет фона для навигации */
-    padding: 10px 20px; /* Отступы сверху и снизу */
+    background-color: #00272B; 
+    padding: 10px 20px; 
 }
 
 .nav-links {
     display: flex;
-    justify-content: flex-end; /* Выравнивание кнопки вправо */
+    justify-content: flex-end; 
 }
 
 .login-button {
-    color: #fff; /* Цвет текста кнопки */
-    text-decoration: none; /* Убираем подчеркивание */
-    padding: 10px 15px; /* Внутренние отступы кнопки */
-    background-color: #00504F; /* Цвет фона кнопки */
-    border-radius: 5px; /* Скругленные углы */
-    transition: background-color 0.3s; /* Плавный переход */
+    color: #fff; 
+    text-decoration: none; 
+    padding: 10px 15px; 
+    background-color: #00504F; 
+    border-radius: 5px; 
+    transition: background-color 0.3s; 
 }
 
 .login-button:hover {
-    background-color: #007B7F; /* Цвет фона при наведении */
+    background-color: #007B7F; 
 }
 
-/* Стили контейнера изображений */
+
 .image-container {
-    display: flex; /* Используем флекс для выравнивания */
-    justify-content: center; /* Центрируем изображения */
-    flex-wrap: wrap; /* Оборачиваем изображения, если не помещаются в одну строку */
-    margin-top: 20px; /* Отступ сверху */
+    display: flex; 
+    justify-content: center; 
+    flex-wrap: wrap; 
+    margin-top: 20px; 
 }
 
 .image-container img {
-    width: 150px; /* Ширина изображений */
-    height: auto; /* Высота автоматически */
-    margin: 10px; /* Отступ между изображениями */
-    border-radius: 5px; /* Скругленные углы изображений */
-    transition: transform 0.3s; /* Плавный переход для анимации */
+    width: 150px; 
+    height: auto; 
+    margin: 10px; 
+    border-radius: 5px; 
+    transition: transform 0.3s; 
 }
 
 .image-container img:hover {
-    transform: scale(1.1); /* Увеличение изображения при наведении */
+    transform: scale(1.1); 
 }

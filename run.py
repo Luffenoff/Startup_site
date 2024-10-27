@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "test")  # Используем значение по умолчанию, если переменная окружения не найдена
+app.secret_key = os.getenv("SECRET_KEY", "test") 
 
 @app.route("/")
 def home():
@@ -28,9 +28,8 @@ def register():
     if request.method == "POST":
         username = request.form.get('username')
         password = request.form.get('password')
-        # Здесь можно добавить логику для сохранения пользователя
         flash("Регистрация пройдена! Пожалуйста войдите.", "success")
-        return redirect(url_for('login'))  # Перенаправление на страницу логина
+        return redirect(url_for('login'))  
     return render_template("register.html")
 
 @app.route("/forgot_password", methods=["GET", "POST"])
@@ -38,7 +37,7 @@ def forgot_password():
     if request.method == "POST":
         email = request.form["email"]
         flash("Сообщение для сброса пароля отправлено на вашу почту", "success")
-        return redirect(url_for('login'))  # Перенаправление на страницу логина
+        return redirect(url_for('login'))  
     return render_template("forgot_password.html")
 
 if __name__ == "__main__":
