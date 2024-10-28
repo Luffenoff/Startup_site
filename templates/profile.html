@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile_styles.css') }}" />
+    <title>Профиль</title>
+    <style>
+        body {
+            background-color: #E0FF4F;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-image {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-details p {
+            margin: 5px 0;
+        }
+
+        .profile-form {
+            background-color: white; /* Белый фон для формы изменения профиля */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            width: 400px; /* Ширина формы */
+            margin-top: 20px; /* Отступ сверху */
+            display: flex; /* Используем flex для центровки */
+            flex-direction: column; /* Упорядочиваем элементы вертикально */
+            align-items: center; /* Центруем содержимое формы */
+        }
+
+        .profile-form h2 {
+            text-align: center; 
+            color: #00272B;
+        }
+
+        .profile-form label {
+            margin-top: 15px;
+            color: #333;
+            width: 100%; /* Ширина 100% для выравнивания с полями ввода */
+        }
+
+        .profile-form input {
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid #00272B;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+            width: 90%; /* Уменьшаем ширину до 90% для отступов */
+        }
+
+        .logout-button, .home-button {
+            padding: 10px 15px;
+            background-color: #00504F;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px; /* Добавить отступ между кнопками */
+            text-decoration: none; /* Убираем подчеркивание */
+            display: inline-block; /* Делаем ссылку блочным элементом */
+        }
+
+        .logout-button:hover, .home-button:hover {
+            background-color: #007B7F;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-links">
+                <a href="/" class="home-button">На главную</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="profile-info">
+            <img src="{{ url_for('static', filename='images/default_profile.png') }}" alt="Profile Image" class="profile-image">
+            <div class="profile-details">
+                <p>Никнейм: <strong>{{ nickname }}</strong></p>
+                <p>Электронная почта: <strong>{{ email }}</strong></p>
+                <p>Дата регистрации: <strong>{{ registration_date }}</strong></p>
+            </div>
+        </div>
+
+        <form action="{{ url_for('update_profile') }}" method="POST" enctype="multipart/form-data" class="profile-form">
+            <h2>Изменить профиль</h2>
+
+            <label for="nickname">Никнейм:</label>
+            <input type="text" id="nickname" name="nickname" required>
+
+            <label for="profile_image">Загрузить фотографию:</label>
+            <input type="file" id="profile_image" name="profile_image" accept="image/*">
+
+            <button type="submit">Сохранить изменения</button>
+        </form>
+
+        <a href="/logout" class="logout-button">Выход</a> <!-- Кнопка выхода -->
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>
