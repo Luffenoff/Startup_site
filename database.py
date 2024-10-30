@@ -32,6 +32,7 @@ def add_user(nickname, email, password, role='user'):
     existing_user = cursor.fetchone()
     if existing_user:
         print("Пользователь с таким адресом электронной почты уже существует.")
+        conn.close()
         return False
     
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -67,6 +68,12 @@ def update_user(user_id, new_nickname):
     conn.close()
 
 def delete_user(user_id):
+    try:
+        user_id = int(user_id)
+    except ValueError:
+        print("Ошибка: user_id должен быть целым числом.")
+        return
+    
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('''

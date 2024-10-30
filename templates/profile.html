@@ -14,7 +14,6 @@
             </div>
         </nav>
     </header>
-
     <div class="container">
         <div class="profile-info">
             <img src="{{ url_for('static', filename='images/default_profile.png') }}" alt="Profile Image" class="profile-image">
@@ -25,6 +24,10 @@
             </div>
         </div>
 
+        {%if role == 'admin'%}
+            <a href="/admin_dashboard" class="admin-button">Администрирование</a>
+        {% endif %}    
+        
         <form action="{{ url_for('update_profile') }}" method="POST" enctype="multipart/form-data" class="profile-form">
             <h2>Изменить профиль</h2>
 
@@ -34,7 +37,6 @@
             <label for="profile_image">Загрузить фотографию:</label>
             <input type="file" id="profile_image" name="profile_image" accept="image/*">
 
-            <!-- Добавление секции для смены пароля -->
             <label for="new_password">Новый пароль:</label>
             <input type="password" id="new_password" name="new_password" placeholder="Введите новый пароль">
 
@@ -58,3 +60,5 @@
     {% endwith %}
 </body>
 </html>
+
+

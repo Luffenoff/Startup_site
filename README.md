@@ -20,7 +20,7 @@
 - Flask
 - HTML/CSS
 - JavaScript
-- PostgreSQL
+- SQLite
 
 ## Установка
 
@@ -42,8 +42,8 @@
    pip install -r requirements.txt
    ```
 
-4. Настройте базу данных PostgreSQL, следуя инструкциям в [документации](https://www.postgresql.org/docs/).
-   
+4. Настройте базу данных SQLite, следуя инструкциям в [документации SQLite](https://www.sqlite.org/docs.html).
+
 5. Запустите приложение:
 
    ```bash
@@ -63,7 +63,7 @@
 
 - [Документация Flask](https://flask.palletsprojects.com/)
 - [GitHub Репозиторий](https://github.com/Luffenoff/Startup_site)
-- [Документация PostgreSQL](https://www.postgresql.org/docs/)
+- [Документация SQLite](https://www.sqlite.org/docs.html)
 
 ## Автор
 
