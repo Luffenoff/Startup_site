@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
     <title>Главная страница</title>
     <style>
-        /* Стиль для кнопок на навигации */
         .nav-button {
             color: #fff;
             text-decoration: none;
@@ -21,7 +20,6 @@
             background-color: #007B7F;
         }
 
-        /* Стиль для баннера куки */
         #cookie-banner {
             position: fixed;
             bottom: 20px;
@@ -56,16 +54,15 @@
     <header>
         <nav>
             <div class="nav-links">
-                {% if user_authenticated %}
-                    <a href="/profile" class="nav-button">Профиль</a>
-                    <a href="/logout" class="nav-button">Выход</a>
+                {% if session.get('logged_in') %}
+                    <a href="{{ url_for('profile') }}" class="nav-button">Профиль</a>
+                    <a href="{{ url_for('logout') }}" class="nav-button">Выход</a>
                 {% else %}
-                    <a href="/login" class="nav-button">Вход / Регистрация</a>
+                    <a href="{{ url_for('login') }}" class="nav-button">Вход / Регистрация</a>
                 {% endif %}
             </div>
         </nav>
     </header>
-    
     <div class="container">
         <div class="image-container">
             <img src="{{ url_for('static', filename='images/1.png') }}" alt="Image 1" />
@@ -75,7 +72,18 @@
             <img src="{{ url_for('static', filename='images/5.png') }}" alt="Image 5" />
         </div>
     </div>
-
+    <script>
+        setInterval(function() {
+            fetch('/update_activity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}' 
+                }
+            });
+        }, 300000);
+    </script>
+    
     {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
         <ul>

@@ -12,8 +12,7 @@
             <h1>Административная Панель</h1>
             <div class="nav-links">
                 <a href="#dashboard" class="nav-button">Главная</a>
-                <a href="#users" class="nav-button">Пользователи</a>
-                <a href="#settings" class="nav-button">Настройки</a>
+                <a href="/profile" class="nav-button">Профиль</a>
                 <a href="/logout" class="nav-button">Выйти</a>
             </div>
         </nav>
@@ -23,6 +22,7 @@
         <section id="dashboard">
             <h2>Добро пожаловать, администратор!</h2>
             <p>Здесь вы можете управлять пользователями, изменять настройки и просматривать данные системы.</p>
+            <a href="{{url_for('site_stats')}}" class="nav-button">Просмотреть статистику</a>
         </section>
 
         <section id="users">
@@ -59,27 +59,10 @@
                     {% endfor%}
                 </tbody>
             </table>
-        </section>
-
-        <section id="settings">
-            <h2>Настройки</h2>
-            <form action="/update-settings" method="POST">
-                <label for="site-name">Название сайта:</label>
-                <input type="text" id="site-name" name="site_name" value="Мой сайт">
-                
-                <label for="theme">Тема:</label>
-                <select id="theme" name="theme">
-                    <option value="light">Светлая</option>
-                    <option value="dark">Тёмная</option>
-                </select>
-
-                <button type="submit" class="action-button">Сохранить настройки</button>
-            </form>
-        </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 Стартап Платформа. Все права защищены.</p>
+        <p>&copy; 2024 Стартап Платформа. Все права защищены. by Luffenoff</p>
     </footer>
 </body>
 </html>

@@ -4,10 +4,12 @@ from datetime import datetime
 
 DATABASE = 'startup_platform.db'
 
+
 def get_db_connection():
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
     return conn
+
 
 def create_table():
     conn = get_db_connection()
@@ -19,11 +21,17 @@ def create_table():
             email TEXT NOT NULL,
             password TEXT NOT NULL,
             registration_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-            role TEXT DEFAULT 'user' -- добавлено поле для роли
+            role TEXT DEFAULT 'user',
+            last_active DATETIME,
+            ip_address TEXT,
+            city TEXT,
+            country TEXT,
+            provider TEXT    
         )
     ''')
     conn.commit()
     conn.close()
+
 
 def add_user(nickname, email, password, role='user'):
     conn = get_db_connection()
@@ -34,15 +42,14 @@ def add_user(nickname, email, password, role='user'):
         print("Пользователь с таким адресом электронной почты уже существует.")
         conn.close()
         return False
-    
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     cursor.execute('''
         INSERT INTO users (nickname, email, password, role) VALUES (?, ?, ?, ?)
     ''', (nickname, email, hashed_password.decode('utf-8'), role))
-    
     conn.commit()
     conn.close()
     return True
+
 
 def get_user(nickname, password):
     conn = get_db_connection()
@@ -56,6 +63,7 @@ def get_user(nickname, password):
         return user
     return None
 
+
 def update_user(user_id, new_nickname):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -66,6 +74,7 @@ def update_user(user_id, new_nickname):
     ''', (new_nickname, user_id))
     conn.commit()
     conn.close()
+
 
 def delete_user(user_id):
     try:

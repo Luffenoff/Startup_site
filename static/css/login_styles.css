@@ -5,14 +5,12 @@ body {
     padding: 0; 
 }
 
-
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh; 
 }
-
 
 .login-form {
     display: flex;
@@ -25,19 +23,16 @@ body {
     border: 2px solid #00272B; 
 }
 
-
 .login-form h2 {
     text-align: center; 
     color: #00272B; 
 }
 
-/* Метки полей */
 .login-form label {
     margin-top: 15px; 
     color: #333; 
 }
 
-/* Поля ввода */
 .login-form input {
     padding: 12px; 
     margin-top: 8px; 
@@ -46,7 +41,6 @@ body {
     background-color: #f5f5f5; 
 }
 
-/* Кнопка */
 .login-form button {
     margin-top: 25px; 
     padding: 12px; 
@@ -58,11 +52,9 @@ body {
     transition: background-color 0.3s; 
 }
 
-
 .login-form button:hover {
     background-color: #00504F; 
 }
-
 
 .links {
     margin-top: 20px; 
@@ -77,7 +69,63 @@ body {
     transition: color 0.3s; 
 }
 
-
 .links a:hover {
     color: #00504F; 
+}
+
+.stats-dashboard {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border: 2px solid #00272B;
+    text-align: center;
+}
+
+.stats-dashboard p {
+    color: #333;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px ;
+    margin-top: 20px;
+}
+
+.stat-item {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border: 1px solid #00272B;
+    border-radius: 5px;
+}
+
+.stat-item h3 {
+    margin: 0;
+    color: #00272B;
+}
+
+.stat-item p {
+    margin: 5px 0 0;
+    color: #555;
+}
+
+.nav-button {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px;
+    background-color: #00272B;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+    background-color: #00504F;
 }

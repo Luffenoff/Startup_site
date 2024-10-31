@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, session
 from flask_caching import Cache
 import os
+import requests
 from dotenv import load_dotenv
 from database import create_table, add_user, update_user, get_user, get_db_connection
 from functools import wraps 
+from datetime import datetime
 
 
 load_dotenv()
@@ -19,7 +21,6 @@ create_table()
 
 
 @app.route("/")
-@cache.cached(timeout=60)
 def home():
     user_authenticated = 'logged_in' in session 
     return render_template("base.html", user_authenticated=user_authenticated)
@@ -35,6 +36,22 @@ def admin_required(f):
     return decorated_function
 
 
+def get_user_location(ip_address):
+    try:
+        response = requests.get(f"http://ip-api.com/json/{ip_address}")
+        response.raise_for_status()
+        data = response.json()
+        if data['status'] == 'success':
+            return {
+            'city': data["city"],
+            'country': data['country'],
+            'provider': data['isp']
+            }
+    except Exception as e:
+        print(f"Не удалось получить данные о местоположении: {e}")
+    return None
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -46,6 +63,24 @@ def login():
             session['user_id'] = user['id']
             session['role'] = user['role']
             flash("Вход успешен", "success")
+            ip_address = request.remote_addr
+            location_data = get_user_location(ip_address)
+            with get_db_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    UPDATE users
+                    SET last_active = ?, ip_address = ?, city = ?, country = ?, provider = ?
+                    WHERE id = ?
+                ''', (
+                    datetime.now(),
+                    ip_address,
+                    location_data['city'] if location_data else None,
+                    location_data['country'] if location_data else None,
+                    location_data['provider'] if location_data else None,
+                    user['id']
+                ))
+                conn.commit()
+
             return redirect(url_for('home'))
         else:
             flash("Неверный логин или пароль", "error")
@@ -58,11 +93,14 @@ def register():
         nickname = request.form.get('username')
         password = request.form.get('password')
         email = request.form.get('email')
-        if add_user(nickname, email, password):
-            flash("Регистрация пройдена! Пожалуйста, войдите.", "success")
-            return redirect(url_for('login'))
+        if nickname and password and email:
+            if add_user(nickname, email, password):
+                flash("Регистрация пройдена! Пожалуйста, войдите.", "success")
+                return redirect(url_for('login'))
+            else:
+                flash("Ошибка регистрации. Попробуйте другой адрес электронной почты.", "error")
         else:
-            flash("Ошибка регистрации. Попробуйте другой адрес электронной почты.", "error")
+            flash("Пожалуйста, заполните все поля.", "error")
     return render_template("register.html")
 
 
@@ -109,7 +147,8 @@ def update_profile():
     user_id = session['user_id']
     nickname = request.form["nickname"]
     profile_image = request.files.get("profile_image")
-    update_user(user_id, nickname)
+    if nickname:
+        update_user(user_id, nickname)
     if profile_image:
         profile_image_path = os.path.join("static/images", profile_image.filename)
         profile_image.save(profile_image_path)
@@ -151,7 +190,7 @@ def delete_user(user_id):
     if 'logged_in' not in session or 'user_id' not in session:
         flash("Пожалуйста, войдите в систему.", "warning")
         return redirect(url_for('login'))
-    conn= get_db_connection()
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('DELETE FROM users WHERE id = ?', (user_id,))
     conn.commit()
@@ -160,12 +199,28 @@ def delete_user(user_id):
     return redirect(url_for('admin_dashboard'))
 
 
+@app.route("/site_stats")
+def site_stats():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM users")
+    user_count = cursor.fetchone()[0]
+    conn.close
+    return render_template("index.html", user_count=user_count)
+
+
 @app.route("/logout")
 def logout():
-    session.pop('logged_in', None) 
-    session.pop('role', None)
+    session.pop('logged_in', None)
     flash("Вы вышли из системы", "success")
     return redirect(url_for('home'))
+
+
+##def main():
+    home()
+    admin_required
+    login()
+    
 
 
 if __name__ == "__main__":

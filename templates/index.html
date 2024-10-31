@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content"width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/login_styles.css') }}">
+        <title>Статистика</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="stats-dashboard">
+                <h2>Статистика сайта</h2>
+                <div class="stats">
+                    <div class="stat-item">
+                        <h3>Пользователи</h3>
+                        <p>{{ total_users }} Зарегистрировано</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>Активные Пользователи</h3>
+                        <p>{{ active_users }} Активные сайчас</p>
+                    <div class="stat-item">
+                        <h3>Публикации</h3>
+                        <p>{{ total_posts }}Всего публикаций</p>
+                    </div>
+                </div>
+                <a href="{{ url_for('admin_dashboard') }}" class="nav-button">Перейти к админке</a>
+            </div>
+        </div>
+    </body>
+</html>
