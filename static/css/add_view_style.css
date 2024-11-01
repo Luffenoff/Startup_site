@@ -1,0 +1,88 @@
+body {
+    background-color: #E0FF4F;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.form-container,
+.startup-list {
+    width: 400px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border: 2px solid #00272b;
+}
+
+.form-container h2,
+.startup-list h2 {
+    color: #00272b;
+    text-align: center;
+}
+
+.form-container label {
+    margin-top: 15px;
+    color: #333;
+}
+
+.form-container input,
+.form-container textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #00272b;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+}
+
+.form-container button {
+    margin-top: 25px;
+    padding: 12px;
+    background-color: #00272b;
+    color: fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-container button:hover {
+    background-color: #00504f;
+}
+
+.startup-list {
+    margin-top: 20px;
+}
+
+.startup-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #00272b;
+    border-radius: 5px;
+}
+
+.startup-item h3 {
+    color: #00272b;
+    margin-bottom: 10px;
+}
+
+.startup-item p {
+    color: #333;
+}
+
+.startup-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+}

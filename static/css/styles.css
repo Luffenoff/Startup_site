@@ -46,7 +46,6 @@ body {
     background-color: #f5f5f5; 
 }
 
-/* Кнопка */
 .login-form button {
     margin-top: 25px; 
     padding: 12px; 
@@ -82,17 +81,6 @@ body {
     color: #00504F; 
 }
 
-
-header {
-    background-color: #00272B; 
-    padding: 10px 20px; 
-}
-
-.nav-links {
-    display: flex;
-    justify-content: flex-end; 
-}
-
 .login-button {
     color: #fff; 
     text-decoration: none; 
@@ -104,24 +92,4 @@ header {
 
 .login-button:hover {
     background-color: #007B7F; 
-}
-
-
-.image-container {
-    display: flex; 
-    justify-content: center; 
-    flex-wrap: wrap; 
-    margin-top: 20px; 
-}
-
-.image-container img {
-    width: 150px; 
-    height: auto; 
-    margin: 10px; 
-    border-radius: 5px; 
-    transition: transform 0.3s; 
-}
-
-.image-container img:hover {
-    transform: scale(1.1); 
 }

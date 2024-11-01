@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-9">
+        <title>Список</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/add_view_style.css') }}" />
+    </head>
+<body>
+    <h2>Стартапы</h2>
+    {% for startup in startups %}
+        <div>
+            <h3>{{ startup['name'] }}</h3>
+            <p>{{ startup['description'] }}</p>
+            {% if startup['image_path'] %}
+                <img src="{{ url_for('static', filename='images/'+ startup['image_path']) }}" alt-"{{ startup['name'] }}">
+            {% endif %}
+        </div>
+    {% endfor %}
+    </body>
+</html>

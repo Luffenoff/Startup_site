@@ -33,6 +33,23 @@ def create_table():
     conn.close()
 
 
+def create_startup_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+                   CREATE TABLE IF NOT EXISTS startups(
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       name TEXT NOT NULL,
+                       description TEXT NOT NULL,
+                       image_path TEXT,
+                       submission_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                       user_id INTEGER,
+                       FOREIGN KEY (user_id) REFERENCES users(id)
+                   )
+                ''')
+    conn.commit()
+    conn.close()
+
 def add_user(nickname, email, password, role='user'):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -91,3 +108,13 @@ def delete_user(user_id):
     ''', (user_id,))
     conn.commit()
     conn.close()
+
+
+def main():
+    get_db_connection()
+    create_table()
+    create_startup_table()
+
+
+if __name__ == '__main__':
+    main()

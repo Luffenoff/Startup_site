@@ -209,6 +209,37 @@ def site_stats():
     return render_template("index.html", user_count=user_count)
 
 
+@app.route('/add_startup', methods=['GET', 'POST'])
+def add_startup():
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        image = request.files['image']
+        if image:
+            image_path = os.path.join('static/images', image.filename)
+            image.save(image_path)
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                           INSERT INTO startups (name, description, image_path)
+                           VALUES (?, ?, ?)
+                           ''', (name, description, image_path))
+            conn.commit()
+        flash("Стартап успешно добавлен!", "success")
+        return redirect(url_for('view_startups'))
+    return render_template('add_startup.html')
+
+
+@app.route('/view_startups')
+def view_startups():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM startups')
+    startups = cursor.fetchall()
+    conn.close
+    return render_template('view_startups.html', startups=startups)
+        
+
 @app.route("/logout")
 def logout():
     session.pop('logged_in', None)
