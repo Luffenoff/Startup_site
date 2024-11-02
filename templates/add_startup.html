@@ -6,14 +6,20 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/add_view_style.css') }}" />
     </head>
 <body>
-    <h2>Добавить новый стартап</h2>
-    <form action=" {{ url_for('add_startup') }}" method="POST" enctype="multipart/form-data">
-        <label for="name">Название стартапа:</label>
-        <input type="text" id="name" name="name" required />
-        <label for="description">Описание:</label>
-        <textarea id="description" name="description" required></textarea>
-        <label for="image">Изображение:</label>
-        <button type="submit">Загрузить</button>
-    </form>
+    <div class="container">
+        <div class="form-container">
+            <h2>Добавить новый стартап</h2>
+            <form action=" {{ url_for('add_startup') }}" method="POST" enctype="multipart/form-data">
+                <label for="name">Название стартапа:</label>
+                <input type="text" id="name" name="name" required />
+                <label for="description">Описание:</label>
+                <textarea id="description" name="description" required oninput="autoResize(this)"></textarea>
+                <label for="image">Изображение:</label>
+                <input type="file" id="image" name="image" accept="image/*" required />
+                <button type="submit" id="submitBtn" disabled>Готово</button>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='add_startup.js') }}"></script>
 </body>
 </html>

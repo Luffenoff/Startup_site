@@ -14,6 +14,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "test")
 
+
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 
