@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="ru">
-    <head>
-        <meta charset="UTF-9">
-        <title>Список</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/add_view_style.css') }}" />
-    </head>
-<body>
-    <div class="container">
-        <div class="startup-list">
-            <h2>Стартапы</h2>
-            {% for startup in startups %}
-                <div class="startup-item">
-                    <h3>{{ startup['name'] }}</h3>
-                    <p>{{ startup['description'] }}</p>
-                    {% if startup['image_path'] %}
-                        <img src="{{ url_for('static', filename='images/'+ startup['image_path']) }}" alt-"{{ startup['name'] }}">
-                    {% endif %}
-                </div>
-            {% endfor %}
+<head>
+    <meta charset="UTF-8" />
+    <title>Карточка проекта</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/project_card_style.css') }}">
+</head>
+    <body>
+        <div class="project-card">
+            <h2>Название проекта</h2>
+            <img src="{{ url_for('static', filename='images/project_image.jpg') }}" alt="Изображение проекта" class="project-image">
+            <p class="project-description">Описание проекта</p>
+            <div class="social-links">
+                <a href="https://vk.com/project" target="_blank" class="vk-icon">VK</a>
+                <a href="https://t.me/project" target="_blank" class="telegram-icon">TG</a>
+            </div>
+            <div class="user-info">
+                <p class="user-name">Имя пользователя</p>
+                <p class="publication-date">Дата публикации: 00.00.0000</p>
+            </div>
+            <div class="project-tag">
+                <span class="tag">Тег1</span>
+                <span class="tag">Тег2</span>
+                <span class="tag">Тег3</span>
             </div>
         </div>
     </body>

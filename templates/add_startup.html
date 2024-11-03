@@ -11,15 +11,16 @@
             <h2>Добавить новый стартап</h2>
             <form action=" {{ url_for('add_startup') }}" method="POST" enctype="multipart/form-data">
                 <label for="name">Название стартапа:</label>
-                <input type="text" id="name" name="name" required />
+                <input type="text" id="name" name="name" required oninput="CheckForm()" />
                 <label for="description">Описание:</label>
                 <textarea id="description" name="description" required oninput="autoResize(this)"></textarea>
                 <label for="image">Изображение:</label>
-                <input type="file" id="image" name="image" accept="image/*" required />
+                <input type="file" id="image" name="image" accept="image/*" required onchange="CheckForm(); previewImage()" />
+                <img id="imagePreview" style="display:none; max-width: 100px; margin-top:10px;" />
                 <button type="submit" id="submitBtn" disabled>Готово</button>
             </form>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='add_startup.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/add_startup.js') }}"></script>
 </body>
 </html>
