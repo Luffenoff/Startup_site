@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, mak
 from flask_caching import Cache
 import os
 import requests
+import logging
 from dotenv import load_dotenv
 from database import create_table, add_user, update_user, get_user, get_db_connection
 from functools import wraps 
@@ -27,6 +28,16 @@ def home():
     return render_template("base.html", user_authenticated=user_authenticated)
 
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("logs/logs.log", encoding='UTF-8'),
+        logging.StreamHandler()
+    ]
+)
+
+
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -49,7 +60,7 @@ def get_user_location(ip_address):
             'provider': data['isp']
             }
     except Exception as e:
-        print(f"Не удалось получить данные о местоположении: {e}")
+        logging.error(f"Не удалось получить данные о местоположении: {e}")
     return None
 
 
@@ -65,6 +76,7 @@ def login():
             session['role'] = user['role']
             flash("Вход успешен", "success")
             ip_address = request.remote_addr
+            logging.info(f"Пользователь {username} вошел в систему с IP {request.remote_addr}")
             location_data = get_user_location(ip_address)
             with get_db_connection() as conn:
                 cursor = conn.cursor()
@@ -85,6 +97,7 @@ def login():
             return redirect(url_for('home'))
         else:
             flash("Неверный логин или пароль", "error")
+            logging.warning(f"Неудачная попытка входа для {username}")
     return render_template("login.html")
 
 
@@ -97,6 +110,7 @@ def register():
         if nickname and password and email:
             if add_user(nickname, email, password):
                 flash("Регистрация пройдена! Пожалуйста, войдите.", "success")
+                logging.info(f"Новый пользователь зарегистрирован: {nickname}, Email: {email}")
                 return redirect(url_for('login'))
             else:
                 flash("Ошибка регистрации. Попробуйте другой адрес электронной почты.", "error")
@@ -196,6 +210,7 @@ def delete_user(user_id):
     cursor.execute('DELETE FROM users WHERE id = ?', (user_id,))
     conn.commit()
     conn.close()
+    logging.info(f"Пользователь {session['user_id']} удалил пользователя с id {user_id}")
     flash("Пользователь удален", "success")
     return redirect(url_for('admin_dashboard'))
 
@@ -219,6 +234,7 @@ def add_startup():
         if image:
             image_path = os.path.join('static/images', image.filename)
             image.save(image_path)
+        
         with get_db_connection() as conn:
             cursor = conn.cursor()
             cursor.execute('''
@@ -226,6 +242,7 @@ def add_startup():
                            VALUES (?, ?, ?)
                            ''', (name, description, image_path))
             conn.commit()
+        logging.info(f"Пользователь {session['user_id']} добавил стартап: {name}, описание; {description}")
         flash("Стартап успешно добавлен!", "success")
         return redirect(url_for('view_startups'))
     return render_template('add_startup.html')
@@ -243,7 +260,24 @@ def view_startups():
 
 @app.route("/logout")
 def logout():
+    user_id = session.get('user_id')
+    if user_id:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT nickname FROM users WHERE id = ?', (user_id,))
+        user = cursor.fetchone()
+        conn.close()
+        
+        if user:
+            nickname = user[0]
+            logging.info(f"Пользователь {nickname} вышел из системы")
+        else:
+            nickname = "Неизвестный пользователь"
+    else:
+        nickname = "Неизвестный пользователь"
     session.pop('logged_in', None)
+    session.pop('user_id', None)
+    logging.info(f"Пользователь {nickname} вышел из системы.")
     flash("Вы вышли из системы", "success")
     return redirect(url_for('home'))
 

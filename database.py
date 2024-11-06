@@ -49,16 +49,51 @@ def create_startup_table():
                 ''')
     conn.commit()
     conn.close()
+    
+    
+def create_logs_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+                   CREATE TABLE IF NOT EXISTS logs (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       user_id INTEGER,
+                       action TEXT,
+                       details TEXT,
+                       timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                   )
+            ''')
+
+
+def log_action(user_id, action, details):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+                   INSERT INTO logs (user_id, action, details)
+                   VALUES (?, ?, ?)
+                   ''', (user_id, action, details))
+    conn.commit()
+    conn.close
+
 
 def add_user(nickname, email, password, role='user'):
     conn = get_db_connection()
     cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM users where nickname = ?", (nickname,))
+    existing_nickname = cursor.fetchall()
+    if existing_nickname:
+        print("Пользователь с таким ником уже существует.")
+        conn.close()
+        return False
+    
     cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
-    existing_user = cursor.fetchone()
-    if existing_user:
+    existing_email = cursor.fetchone()
+    if existing_email:
         print("Пользователь с таким адресом электронной почты уже существует.")
         conn.close()
         return False
+    
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     cursor.execute('''
         INSERT INTO users (nickname, email, password, role) VALUES (?, ?, ?, ?)
@@ -81,14 +116,26 @@ def get_user(nickname, password):
     return None
 
 
-def update_user(user_id, new_nickname):
+def update_user(user_id, new_nickname=None, new_email=None, new_role=None):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('''
-        UPDATE users
-        SET nickname = ?
-        WHERE id = ?
-    ''', (new_nickname, user_id))
+
+    update_data = []
+    query = 'UPDATE users SET'
+    if new_nickname:
+        query += ' nickname = ?, '
+        update_data.append(new_nickname)
+    if new_email:
+        query += 'email = ?,'
+        update_data.append(new_email)
+    if new_role:
+        query += 'role = ?,'
+        update_data.append(new_role)
+    query = query.rstrip(',')
+    query += ' WHERE id = ?'
+    update_data.append(user_id)
+    
+    cursor.execute(query, tuple(update_data))
     conn.commit()
     conn.close()
 
@@ -106,8 +153,21 @@ def delete_user(user_id):
         DELETE FROM users
         WHERE id = ?
     ''', (user_id,))
+    cursor.execute('''
+                   DELETE FROM users
+                   WHERE id = ?
+                   ''', (user_id,))
     conn.commit()
     conn.close()
+
+
+def is_admin(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT role FROM users WHERE id = ?', (user_id,))
+    user = cursor.fetchall()
+    conn.close()
+    return user['role'] == 'admin'
 
 
 def main():
