@@ -65,6 +65,23 @@ def create_logs_table():
             ''')
 
 
+def create_startup_submission_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+                CREATE TABLE IF NOT EXISTS startup_submissions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    startup_id INTEGER,
+                    user_id INTEGER,
+                    moderation_status TEXT DEFAULT 'На модерации',
+                    FOREIGN KEY (startup_id) REFERENCES startups(id),
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                )
+            ''')
+    conn.commit()
+    conn.close()
+
+
 def log_action(user_id, action, details):
     conn = get_db_connection()
     cursor = conn.cursor()

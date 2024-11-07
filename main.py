@@ -41,11 +41,19 @@ logging.basicConfig(
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'logged_in' not in session or session.get('role') != 'admin':
+        if 'role' not in session or session.get('role') != 'admin':
             flash('У вас нет доступа к этой странице.', 'error')
-            return redirect(url_for('login'))
+            return redirect(url_for('home'))
         return f(*args, **kwargs)
     return decorated_function
+
+
+@app.route('/moderation', methods=['GET'])
+@admin_required
+def moderate_startup():
+    if 'role' not in session or session['role'] != 'admin':
+        return redirect(url_for('base'))
+    return render_template('moderation.html')
 
 
 def get_user_location(ip_address):
@@ -242,6 +250,14 @@ def add_startup():
                            VALUES (?, ?, ?)
                            ''', (name, description, image_path))
             conn.commit()
+            
+            startup_id = cursor.lastrowid
+            
+            cursor.execute('''
+                           INSERT INTO startup_submissions (startup_id, user_id)
+                           VALUES (?, ?)
+                           ''', (startup_id, session['user_id']))
+            conn.commit()
         logging.info(f"Пользователь {session['user_id']} добавил стартап: {name}, описание; {description}")
         flash("Стартап успешно добавлен!", "success")
         return redirect(url_for('view_startups'))
@@ -280,6 +296,45 @@ def logout():
     logging.info(f"Пользователь {nickname} вышел из системы.")
     flash("Вы вышли из системы", "success")
     return redirect(url_for('home'))
+
+
+@app.route("/moderate_startup/<int:startup_id>/<status>", methods = ['POST'], endpoint='moderate_startup_status')
+@admin_required
+def moderate_startup_status(startup_id, status):
+    valid_statuses = ['Опубликовано', 'На модерации', 'Отклонения']
+    if status not in valid_statuses:
+        flash("Некорректно", "error")
+        return redirect(url_for('moderate_startup_page'))
+    
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+                    UPDATE startup_submissions
+                    SET moderation_status = ?
+                    WHERE startup_id = ?
+                    ''', (status, startup_id))
+        conn.commit()
+    flash(f"Статус стартапа изменен на {status}.", "success")
+    return redirect(url_for('moderate_startup_page'))
+
+
+@app.route("/startup/<int:startup_id>")
+def view_startup(startup_id):
+    conn = get_db_connection()
+    cursor = conn.cursor
+    cursor.execute('''
+                SELECT startups.*, users.nickname FROM startups
+                JOIN users ON startups.user_id = users.id
+                WHERE startups.id = ?
+                ''', (startup_id))
+    startup = cursor.fetchone()
+    conn.close()
+    
+    if startup:
+        return render_template('startup_detail.html', startup=startup)
+    else:
+        flash("Стартап не найден.", "error")
+        return redirect(url_for('view_startups'))
 
 
 ##def main():

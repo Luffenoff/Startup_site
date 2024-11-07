@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/moderation.css')}}" />
+    <title>Модерация</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Модерация</h1>
+        <div class="startup-list">
+            {% for startup in startups %}
+                <div class="startup-card">
+                    <div class="startup-info">
+                        <h2>{{ startup.name }}</h2>
+                        <p>{{ startup.description }}</p>
+                        <p><strong>Публикация:</strong> {{ startup.publication_date}}</p>
+                        <p><strong>Статус:</strong> {{ startup.status }}</p>
+                    </div>
+                    <div class="startup-actions">
+                    {% if startup.status == 'Under Review' %}
+                        <form action="{{ url_for('approve_startup', startup_id=startup.id) }}" method="POST">
+                            <button type="submit" class="btn btn-primary">Одобрить</button>
+                        </form>
+                        <form action="{{ url_for('reject_startup', startup_id=startup.id) }}" method="POST">
+                            <button type="submit" class="reject-btn">Отклонить</button>
+                        </form>
+                    {% elif startup.status == 'Published' %}
+                        <button class='disabled-btn' disabled>Опубликовано</button>
+                    {% elif startup.status == 'Rejected'%}
+                        <button class='disabled-btn' disabled>Отклонено</button>
+                    {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="nav-button">Назад к панели</a>
+    </div>
+</body>
+</html>
