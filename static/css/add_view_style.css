@@ -104,3 +104,31 @@ button:hover {
     border-radius: 5px;
     border: 1px solid #ddd;
 }
+
+input#social-vk {
+    background-image: url('/static/images/vk_icon48px.png');
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    padding-left: 55px;
+}
+
+input#social-tg {
+    background-image: url('/static/images/tg_icon48px.png');
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    padding-left: 55px;
+}
+
+input#social-dc {
+    background-image: url('/static/images/dc_icon48px.png');
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    padding-left: 55px;
+}
+
+input#social-gh {
+    background-image: url('/static/images/gh_icon48px.png');
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    padding-left: 55px;
+}
