@@ -7,15 +7,6 @@ from dotenv import load_dotenv
 from database import create_table, add_user, update_user, get_user, get_db_connection
 from functools import wraps 
 from datetime import datetime
-from fastapi import FastAPI
-
-
-app = FastAPI()
-
-
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
 
 
 load_dotenv()
