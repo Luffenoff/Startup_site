@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/faq.css') }}" />
+    <title>FAQ</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-links">
+                {% if session.get('logged_in') %}
+                    <a href="{{ url_for('home') }}" class="nav-button">На главную</a>
+                    <a href="{{ url_for('profile') }}" class="nav-button">Профиль</a>
+                {% else %}
+                    <a href="{{ url_for('home') }}" class="nav-button">На главную</a>
+                    <a href="{{ url_for('login') }}" class="nav-button">Вход / Регистрация</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    <main>
+        <h1>FAQ</h1>
+        {% with message = get_flashed_messages(with_categories=True) %}
+            {% if message %}
+                <ul>
+                    {% for category, message in messages %}
+                        <li class="{{ category }}"> {{message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {% if session.get('logged_in') %}
+            <form action="{{ url_for('faq') }}" method='POST'>
+                <label for="question">Ваш вопрос:</label>
+                <textarea id="question" name="question" required></textarea>
+                <button type="submit">Отправить запрос</button>
+            </form>
+        {% else %}
+            <p>Пожалуйста, <a href="{{ url_for('login') }}">Войдите в аккунт</a>, чтобы задать вопрос.</p>
+        {% endif %}
+        </main>
+
+    <script>
+        setInterval(function() {
+            fetch('/update_activity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}' 
+                }
+            });
+        }, 300000);
+    </script>
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if not request.cookies.get('cookie_consent') %}
+        <div id="cookie-banner">
+            <img src="{{ url_for('static', filename='images/cookie_icon.png') }}" alt="Cookie Icon" />
+            <p>Мы используем куки для улучшения вашего опыта на сайте.</p>
+            <a href="{{ url_for('accept_cookies') }}" id="accept-cookies">Принять</a>
+        </div>
+    {% endif %}
+</body>
+</html>

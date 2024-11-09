@@ -7,6 +7,15 @@ from dotenv import load_dotenv
 from database import create_table, add_user, update_user, get_user, get_db_connection
 from functools import wraps 
 from datetime import datetime
+from fastapi import FastAPI
+
+
+app = FastAPI()
+
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello, World!"}
 
 
 load_dotenv()
@@ -335,12 +344,29 @@ def view_startup(startup_id):
     else:
         flash("Стартап не найден.", "error")
         return redirect(url_for('view_startups'))
-
+    
+    
+@app.route("/faq", methods = ['GET', 'POST'])
+def faq():
+    if request.method == "POST":
+        if 'logged_in' not in session:
+            flash("Пожалуйста, войдите в аккаунт")
+            return redirect(url_for('login'))
+        question = request.form.get("question")
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('INSERT INTO faq_questions (user_id, question) VALUES (?, ?)',
+                       (session['user_id'], question))
+            conn.commit()
+        flash("Ваш запрос был отправлен", "success")
+        return redirect(url_for('faq'))
+    return render_template("faq.html")
+    
 
 ##def main():
-    home()
-    admin_required
-    login()
+    ##home()
+    ##admin_required
+    ##login()
     
 
 

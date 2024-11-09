@@ -12,7 +12,6 @@
             <div class="nav-links">
                 {% if session.get('logged_in') %}
                     <a href="{{ url_for('profile') }}" class="nav-button">Профиль</a>
-                    <a href="{{ url_for('logout') }}" class="nav-button">Выход</a>
                 {% else %}
                     <a href="{{ url_for('login') }}" class="nav-button">Вход / Регистрация</a>
                 {% endif %}

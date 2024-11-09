@@ -1,0 +1,3 @@
+npm init -y
+npm install react react-dom typescript webpack webpack-cli
+npm install --save-dev ts-loader webpack-dev-server
