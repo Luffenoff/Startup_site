@@ -409,9 +409,6 @@ def reject_startup(startup_id):
 
 @app.route("/faq", methods = ['GET', 'POST'])
 def faq():
-    
-    
-
     if request.method == "POST":
         if 'logged_in' not in session:
             flash("Пожалуйста, войдите в аккаунт")
