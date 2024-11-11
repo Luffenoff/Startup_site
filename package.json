@@ -1,3 +1,26 @@
-npm init -y
-npm install react react-dom typescript webpack webpack-cli
-npm install --save-dev ts-loader webpack-dev-server
+{
+    "name": "startup_site",
+    "version": "1.0.0",
+    "description": "Проект представляет собой веб-приложение для стартапов, позволяющее пользователям регистрироваться, входить в систему, голосовать и загружать стартапы. Включает функционал для администраторов, модераторов и обычных пользователей.",
+    "main": "index.js",
+    "scripts": {
+        "build": "webpack --mode production",
+        "start": "webpack serve --mode development"
+    },
+    "author": "",
+    "license": "ISC",
+    "keywords": [],
+    "dependencies": {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "typescript": "^5.6.3",
+        "webpack": "^5.96.1",
+        "webpack-cli": "^5.1.4"
+    },
+    "devDependencies": {
+        "ts-loader": "^9.5.1",
+        "webpack-dev-server": "^5.1.0",
+        "@types/react": "^18.0.27",
+        "@types/react-dom": "^18.0.10"
+    }
+}

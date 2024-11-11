@@ -1,13 +1,14 @@
+// webpack.config.js
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.tsx', 
+  entry: './src/index.tsx',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'static/js')
+    path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.ts', '.tsx', '.js'],
   },
   module: {
     rules: [
@@ -19,7 +20,10 @@ module.exports = {
     ],
   },
   devServer: {
-    contentBase: path.resolve(__dirname, 'static'),
-    hot: true,
+    static: {
+      directory: path.join(__dirname, 'dist'), 
+    },
+    compress: true,
+    port: 8080,
   },
 };

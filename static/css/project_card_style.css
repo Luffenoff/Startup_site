@@ -40,7 +40,7 @@ body {
     font-size: 14px;
     margin-bottom: 15px;
     position: relative;
-    top: 200px;
+    top: -165px;
 }
 
 .social-links {
@@ -49,7 +49,7 @@ body {
     gap: 10px;
     margin-bottom: 15px;
     position: relative;
-    top: 375px;
+    top: 35px;
 }
 
 .vk-icon {
@@ -68,12 +68,28 @@ body {
     text-decoration: none; 
 }
 
+.github-icon {
+    background-color: rgb(18, 42, 54);
+    color: white; 
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    text-decoration: none; 
+}
+
+.dc-icon {
+    background-color: rgb(108, 47, 219);
+    color: rgb(255, 255, 255); 
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    text-decoration: none; 
+}
+
 .user-info {
     color: #333;
     font-size: 12px;
     margin-bottom: 15px;
     position: relative;
-    top: 375px;
+    top: 35px;
 }
 
 .project-tag { 
@@ -81,7 +97,7 @@ body {
     justify-content: center;
     gap: 5px;
     position: relative;
-    top: 375px;
+    top: 25px;
 }
 
 .tag {
