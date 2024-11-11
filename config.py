@@ -11,3 +11,5 @@ def reset_users_table():
 
 if __name__ == "__main__":
     reset_users_table()
+    
+    
