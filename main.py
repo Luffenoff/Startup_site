@@ -7,24 +7,13 @@ from dotenv import load_dotenv
 from database import create_table, add_user, update_user, get_user, get_db_connection
 from functools import wraps 
 from datetime import datetime
-from fastapi import FastAPI
-
-
-app = FastAPI()
-
-
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
-
+from werkzeug.utils import secure_filename
+from PIL import Image
+import uuid
 
 load_dotenv()
-
-
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "test")
-
-
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 
@@ -55,14 +44,6 @@ def admin_required(f):
             return redirect(url_for('home'))
         return f(*args, **kwargs)
     return decorated_function
-
-
-@app.route('/moderation', methods=['GET'])
-@admin_required
-def moderate_startup():
-    if 'role' not in session or session['role'] != 'admin':
-        return redirect(url_for('base'))
-    return render_template('moderation.html')
 
 
 def get_user_location(ip_address):
@@ -238,16 +219,22 @@ def site_stats():
     cursor = conn.cursor()
     cursor.execute("SELECT COUNT(*) FROM users")
     user_count = cursor.fetchone()[0]
-    conn.close
+    conn.close()
     return render_template("index.html", user_count=user_count)
 
 
 @app.route('/add_startup', methods=['GET', 'POST'])
 def add_startup():
+    if 'user_id' not in session:
+        flash("Пожалуйста, войдите в систему.", "error")
+        return redirect(url_for('login'))
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
         image = request.files['image']
+        user_id = session.get('user_id')
+        startup_uuid = str(uuid.uuid4())
+        image_path = None
         if image:
             image_path = os.path.join('static/images', image.filename)
             image.save(image_path)
@@ -263,9 +250,9 @@ def add_startup():
             startup_id = cursor.lastrowid
             
             cursor.execute('''
-                           INSERT INTO startup_submissions (startup_id, user_id)
-                           VALUES (?, ?)
-                           ''', (startup_id, session['user_id']))
+                           INSERT INTO startup_submissions (startup_id, user_id, moderation_status)
+                           VALUES (?, ?, 'На модерации')
+                           ''', (startup_id, user_id))
             conn.commit()
         logging.info(f"Пользователь {session['user_id']} добавил стартап: {name}, описание; {description}")
         flash("Стартап успешно добавлен!", "success")
@@ -279,7 +266,7 @@ def view_startups():
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM startups')
     startups = cursor.fetchall()
-    conn.close
+    conn.close()
     return render_template('view_startups.html', startups=startups)
         
 
@@ -307,10 +294,46 @@ def logout():
     return redirect(url_for('home'))
 
 
+@app.route('/moderation', methods=['GET'])
+@admin_required
+def moderate_startup():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM startups")
+    startups = cursor.fetchall()
+    conn.close
+    return render_template('moderation.html', startups=startups)
+
+
+@app.route('/moderate_startup', methods=['GET'])
+@admin_required
+def moderate_startup_page():
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT ss.id, s.name, s.description, s.image_path, ss.moderation_status
+            FROM startup_submissions ss
+            JOIN startups s ON ss.startup_id = s.id
+            WHERE ss.moderation_status = 'На модерации'
+        ''')
+        startups = cursor.fetchall()
+    
+    startups_data = [{
+        'id': startup[0],
+        'name': startup[1],
+        'description': startup[2],
+        'publication_date': startup[3],
+        'status': startup[4]
+    } for startup in startups]
+
+    return render_template('moderation.html', startups=startups_data)
+
+
+
 @app.route("/moderate_startup/<int:startup_id>/<status>", methods = ['POST'], endpoint='moderate_startup_status')
 @admin_required
 def moderate_startup_status(startup_id, status):
-    valid_statuses = ['Опубликовано', 'На модерации', 'Отклонения']
+    valid_statuses = ['Опубликовано', 'На модерации', 'Отклонено']
     if status not in valid_statuses:
         flash("Некорректно", "error")
         return redirect(url_for('moderate_startup_page'))
@@ -318,36 +341,77 @@ def moderate_startup_status(startup_id, status):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute('''
+                       SELECT * FROM startup_submissions WHERE startup_id = ?
+                       ''', (startup_id,))
+        startup = cursor.fetchone()
+        if not startup:
+            flash("Карточка с таким id не найден.", "error")
+            return redirect(url_for('moderate_startup_page'))
+        cursor.execute('''
                     UPDATE startup_submissions
                     SET moderation_status = ?
                     WHERE startup_id = ?
                     ''', (status, startup_id))
         conn.commit()
+    logging.info(f"Стартап ID {startup_id} статус изменил на {status}")
     flash(f"Статус стартапа изменен на {status}.", "success")
     return redirect(url_for('moderate_startup_page'))
 
 
-@app.route("/startup/<int:startup_id>")
-def view_startup(startup_id):
-    conn = get_db_connection()
-    cursor = conn.cursor
-    cursor.execute('''
-                SELECT startups.*, users.nickname FROM startups
-                JOIN users ON startups.user_id = users.id
-                WHERE startups.id = ?
-                ''', (startup_id))
-    startup = cursor.fetchone()
-    conn.close()
+@app.route('/view_startup/<int:startupid>')
+def view_startup(startupid):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+                       SELECT * FROM startups WHERE id = ?
+                       ''', (startupid,))
+        startup = cursor.fetchone()
+
+        if startup:
+            cursor.execute('''
+                           SELECT * FROM startup_submissions WHERE startup_id = ? AND moderation_status = 'Принят'
+                           ''', (startupid,))
+            submission = cursor.fetchone()
+
+            if submission:
+                return render_template('view_startup.html', startup=startup)
+            else:
+                flash("Этот стартап еще не прошел модерацию.", "warning")
+                return redirect(url_for('view_startups'))
+        else:
+            flash("Стартап не найден.", "error")
+            return redirect(url_for('view_startups'))
     
-    if startup:
-        return render_template('startup_detail.html', startup=startup)
-    else:
-        flash("Стартап не найден.", "error")
-        return redirect(url_for('view_startups'))
-    
-    
+
+@app.route('/approve_startup/<int:startup_id>', methods=['POST'])
+@admin_required
+def approve_startup(startup_id):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        
+        cursor.execute("UPDATE startups SET moderation_status = 'Опубликовано' WHERE startup_id = ?", (startup_id,))
+        conn.commit()
+        flash("Стартап одобрен!", "success")
+        return redirect(url_for('moderate_startup'))
+        
+
+@app.route('/reject_startup/<int:startup_id>', methods=['POST'])
+@admin_required
+def reject_startup(startup_id):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("UPDATE startups SET moderation_status = 'Отклонено' WHERE startup_id = ?", (startup_id,))
+    flash("Стартап отклонен.", "error")
+    return redirect(url_for('moderate_startup'))
+                       
+
+
+
 @app.route("/faq", methods = ['GET', 'POST'])
 def faq():
+    
+    
+
     if request.method == "POST":
         if 'logged_in' not in session:
             flash("Пожалуйста, войдите в аккаунт")

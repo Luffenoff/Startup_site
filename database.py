@@ -6,9 +6,13 @@ DATABASE = 'startup_platform.db'
 
 
 def get_db_connection():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+    try:
+        conn = sqlite3.connect(DATABASE)
+        conn.row_factory = sqlite3.Row
+        return conn
+    except sqlite3.Error as e:
+        print(f"Ошибка подключения к БД {e}")
+        return None
 
 
 def create_table():
@@ -63,6 +67,8 @@ def create_logs_table():
                        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
                    )
             ''')
+    conn.commit()
+    conn.close()
 
 
 def create_startup_submission_table():
@@ -90,7 +96,7 @@ def log_action(user_id, action, details):
                    VALUES (?, ?, ?)
                    ''', (user_id, action, details))
     conn.commit()
-    conn.close
+    conn.close()
 
 
 def add_user(nickname, email, password, role='user'):
@@ -170,11 +176,6 @@ def delete_user(user_id):
         DELETE FROM users
         WHERE id = ?
     ''', (user_id,))
-    cursor.execute('''
-                   DELETE FROM users
-                   WHERE id = ?
-                   ''', (user_id,))
-    conn.commit()
     conn.close()
 
 
@@ -182,15 +183,17 @@ def is_admin(user_id):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT role FROM users WHERE id = ?', (user_id,))
-    user = cursor.fetchall()
+    user = cursor.fetchone()
     conn.close()
-    return user['role'] == 'admin'
+    return user and user['role'] == 'admin'
 
 
 def main():
     get_db_connection()
     create_table()
     create_startup_table()
+    create_logs_table()
+    create_startup_submission_table()
 
 
 if __name__ == '__main__':

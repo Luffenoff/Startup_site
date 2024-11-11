@@ -1,0 +1,20 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app  
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+    depends_on:
+      - db
+  db:
+    image: nouchka/sqlite3:latest
+    volumes:
+      - ./startup_platform.db:/data/startup_platform.db 
+    environment:
+      - SQLITE_FILE=/data/startup_platform.db
