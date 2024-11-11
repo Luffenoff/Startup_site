@@ -132,3 +132,7 @@ input#social-gh {
     background-position: 5px center;
     padding-left: 55px;
 }
+
+.tags {
+    color: #00272b;
+}
