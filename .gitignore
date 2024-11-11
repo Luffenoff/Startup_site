@@ -5,5 +5,4 @@ __pycache__/
 *.sqlite3
 *.env
 *.log
-/static/images/*
 /node_modules/*
