@@ -19,6 +19,9 @@
         </nav>
     </header>
     <div class="container">
+        <div class ="title-container">
+            <h1 class="title">Startup</h1>
+        </div>      
         <div class="image-container">
             <img src="{{ url_for('static', filename='images/1.png') }}" alt="Image 1" />
             <img src="{{ url_for('static', filename='images/2.png') }}" alt="Image 2" />
@@ -26,6 +29,10 @@
             <img src="{{ url_for('static', filename='images/4.png') }}" alt="Image 4" />
             <img src="{{ url_for('static', filename='images/5.png') }}" alt="Image 5" />
         </div>
+        <div class="button-container">
+            <a href="{{ url_for('add_startup') }}" class="btn-branch">
+                Добавить проект
+            </a>
     </div>
     <script>
         setInterval(function() {

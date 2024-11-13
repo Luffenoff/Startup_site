@@ -218,7 +218,7 @@ def site_stats():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT COUNT(*) FROM users")
-    user_count = cursor.fetchone()[0]
+    user_count = cursor.fetchall
     conn.close()
     return render_template("index.html", user_count=user_count)
 
@@ -314,6 +314,7 @@ def moderate_startup_page():
             SELECT ss.id, s.name, s.description, s.image_path, ss.moderation_status
             FROM startup_submissions ss
             JOIN startups s ON ss.startup_id = s.id
+            JOIN users u ON ss.user_id = u.id
             WHERE ss.moderation_status = 'На модерации'
         ''')
         startups = cursor.fetchall()
@@ -323,7 +324,9 @@ def moderate_startup_page():
         'name': startup[1],
         'description': startup[2],
         'publication_date': startup[3],
-        'status': startup[4]
+        'status': startup[4],
+        'user_nickname': startup[5],
+        'image_path': startup[6]
     } for startup in startups]
 
     return render_template('moderation.html', startups=startups_data)
@@ -405,6 +408,18 @@ def reject_startup(startup_id):
     return redirect(url_for('moderate_startup'))
                        
 
+def get_startups():
+    conn = get_db_connection
+    cursor = conn.cursor()
+    cursor.execute('''
+                   SELECT startups.id, startups.name, startups.description, startups.image_path,
+               startups.submission_date, users.nickname 
+        FROM startups
+        LEFT JOIN users ON startups.user_id = users.id
+    ''')
+    startups = cursor.fetchall()
+    conn.close()
+    return startups
 
 
 @app.route("/faq", methods = ['GET', 'POST'])

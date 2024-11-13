@@ -10,6 +10,8 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    flex-direction: column;
+    text-align: center;
 }
 
 header {
@@ -21,13 +23,15 @@ header {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 20px;
+    margin-top: 100px;
+    padding: 20px;
+    position: relative;
 }
 
 .image-container img {
-    width: 150px;
+    max-width: 100%;
     height: auto;
-    margin: 10px;
+    margin-top: 30px;
     border-radius: 5px;
     transition: transform 0.3s;
 }
@@ -92,4 +96,44 @@ nav {
     cursor: pointer;
     text-decoration: none;
     border-radius: 5px;
+}
+
+.title-container {
+    margin-top: 50px;
+    position: relative;
+}
+
+.title {
+    text-transform: uppercase;
+    color: aliceblue;
+    font-size: 5em;
+    letter-spacing: 10px;
+    text-shadow: 0 0 10px cyan,
+    0 0 20px cyan,
+    0 0 40px cyan,
+    0 0 80px cyan;
+    margin-top: 75px;
+    background-color: #00272b;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.btn-branch { 
+    padding: 10px 20px;
+    background-color: #00272b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-branch:hover {
+    background-color: #052b07;
 }

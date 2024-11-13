@@ -16,20 +16,26 @@
                         <h2>{{ startup.name }}</h2>
                         <p>{{ startup.description }}</p>
                         <p><strong>Публикация:</strong> {{ startup.publication_date }}</p>
-                        <p><strong>Статус:</strong> {{ startup.moderation_status }}</p>
+                        <p><strong>Статус:</strong> {{ startup.status }}</p>
+                        <p><strong>Автор:</strong> {{ startup.user_nickname }}</p>
+                        {% if startup.user_profile_picture %}
+                            <img src="{{ url_for('static', filename='images/' + startup.user_profile_picture) }}" alt="Фото пользователя" class="user-profile-picture">
+                        {% else %}
+                            <p>Фото не загружено</p>
+                        {% endif %}
                     </div>
                     <div class="startup-actions">
-                        {% if startup.moderation_status == 'На модерации' %}
-                            <form action="{{ url_for('approve_startup', startup_id=startup.startup_id) }}" method="POST">
+                        {% if startup.status == 'На модерации' %}
+                            <form action="{{ url_for('approve_startup', startup_id=startup.id) }}" method="POST">
                                 <button type="submit" class="btn btn-primary">Одобрить</button>
                             </form>
-                            <form action="{{ url_for('reject_startup', startup_id=startup.startup_id) }}" method="POST">
+                            <form action="{{ url_for('reject_startup', startup_id=startup.id) }}" method="POST">
                                 <button type="submit" class="reject-btn">Отклонить</button>
                             </form>
-                        {% elif startup.moderation_status == 'Опубликовано' %}
-                            <button class='disabled-btn' disabled>Опубликовано</button>
-                        {% elif startup.moderation_status == 'Отклонено' %}
-                            <button class='disabled-btn' disabled>Отклонено</button>
+                        {% elif startup.status == 'Опубликовано' %}
+                            <button class="disabled-btn" disabled>Опубликовано</button>
+                        {% elif startup.status == 'Отклонено' %}
+                            <button class="disabled-btn" disabled>Отклонено</button>
                         {% endif %}
                     </div>
                 </div>
@@ -38,4 +44,4 @@
         <a href="{{ url_for('admin_dashboard') }}" class="nav-button">Назад к панели</a>
     </div>
 </body>
-</html>
+</html>    
